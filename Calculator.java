@@ -27,6 +27,8 @@ public class Calculator extends JFrame {
 	private double    lastValue;
 	private JTextArea lcdDisplay;
 	private JLabel    errorDisplay;
+	private JButton clear  = new JButton("C");
+	private JButton CEntry = new JButton("CE");
 
 	public static void main(String[] args) {
 		// Remember, all swing components must be accessed from
@@ -106,7 +108,7 @@ public class Calculator extends JFrame {
 	private final ActionListener clearListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == "C") {
+			if (e.getSource() == clear) {
 				resetState();
 			} else {
 				lcdDisplay.setText("0");
@@ -175,12 +177,10 @@ public class Calculator extends JFrame {
 	public JPanel buildClearPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1, 3));
-
-		JButton clear = new JButton("C");
+		
 		clear.addActionListener(clearListener);
 		panel.add(clear);
 
-		JButton CEntry = new JButton("CE");
 		CEntry.addActionListener(clearListener);
 		panel.add(CEntry);
 
@@ -193,7 +193,7 @@ public class Calculator extends JFrame {
 		String displayText = lcdDisplay.getText();
 		String valueString = Integer.toString(i);
 
-		if (("0".equals(displayText)) || (FIRST.equals(status))) {
+		if ("0".equals(displayText) || FIRST.equals(status)) {
 			displayText = "";
 		}
 
@@ -210,6 +210,10 @@ public class Calculator extends JFrame {
 	}
 
 	public void operatorButtonPressed(Operator newOperation) {
+		if (FIRST.equals(status)) {
+			previousOperation = newOperation;
+			return;
+		}
 		Double displayValue = Double.valueOf(lcdDisplay.getText());
 
 		switch (previousOperation) {
